@@ -1,0 +1,1537 @@
+.header {
+  background-color: $color-white;
+
+  @media print {
+    display: none;
+  }
+}
+
+.header-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  @include breakpoint($breakpoint-sm-only) {
+    z-index: 12;
+  }
+
+  @include breakpoint($breakpoint-md) {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
+    height: $header-md-height-menu-bar;
+    margin-bottom: $header-md-height-secondary-nav;
+    z-index: 22;
+  }
+
+  @include breakpoint($breakpoint-lg) {
+    height: $header-lg-height-menu-bar;
+  }
+}
+
+.header-nav__primary {
+  @include reset-list;
+  height: $header-sm-height-primary-nav;
+
+  &:after {
+    position: absolute;
+    top: 0;
+    right: 50%;
+    bottom: 0;
+    left: 0;
+    border-right: 1px solid $color-light;
+    content: '';
+    pointer-events: none;
+  }
+
+  @include breakpoint($breakpoint-sm-only) {
+    background-color: $color-white;
+  }
+
+  @include breakpoint($breakpoint-md) {
+    height: 100%;
+
+    &:after {
+      content: none;
+    }
+  }
+
+  @include breakpoint($page-width-max) {
+    max-width: $page-width-max;
+    margin: 0 auto;
+  }
+}
+
+.header-nav__primary-item {
+  width: 50%;
+  height: $header-sm-height-primary-nav - 1px;
+  float: left;
+  border-bottom: 1px solid $color-light;
+
+  &.header-nav__primary-item--active {
+    border-bottom-color: $color-primary;
+  }
+
+  @include breakpoint($breakpoint-sm-only) {
+    .header-no-primary-links & {
+      height: 0;
+      border-bottom: 0;
+    }
+  }
+
+  @include breakpoint($breakpoint-md) {
+    width: auto;
+    height: 100%;
+    border: 0;
+  }
+}
+
+.header-nav__primary-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: color $transition-standard;
+  color: $color-medium-dark;
+  font-size: 1.6rem;
+  letter-spacing: 1px;
+  line-height: $header-sm-height-primary-nav;
+  text-decoration: none;
+  text-transform: uppercase;
+  box-sizing: border-box;
+
+  .header-nav__primary-item--active & {
+    color: $color-primary;
+  }
+
+  @include breakpoint($breakpoint-sm-only) {
+    text-align: center;
+  }
+
+  @include breakpoint($breakpoint-md) {
+    position: relative;
+    padding: 0 10px;
+    line-height: $header-md-height-menu-bar;
+
+    &:hover,
+    .header-nav__primary-item--active & {
+      color: $color-dark;
+      // Make text bold without increasing container width.
+      text-shadow: .5px 0 .1px, -.5px 0 .1px $color-white;
+    }
+
+    // The most consistent cross-browser/device way to accomplish a non-right
+    // triangle (really a half-hidden diamond) filled with a background image.
+    // The final visible triangle is 30px wide and 10px tall.
+    .header-nav__primary-item--active &:before {
+      position: absolute;
+      // Would be -10px (the diamond's height is 20px after scaleY() and
+      // rotate()), but zooming can causes odd issues that the 1 extra px fixes.
+      bottom: -11px;
+      // Centers within the parent (would be 15px if it weren't for transform).
+      left: calc(50% - 10px);
+      // Creates the proper angles/size after scaling/rotating.
+      width: 21px;
+      height: 21px;
+      // scaleY(): The diamond should be 20px tall and 30px wide (20 / 30).
+      // scaleX(): Makes up for the extra 1px in the bottom property.
+      transform: scaleY(.6666) scaleX(1.1) rotate(-45deg);
+      background-image: url('../images/#{$header-background-filename}');
+      content: '';
+      pointer-events: none;
+
+      .header-no-primary-links & {
+        content: none;
+      }
+    }
+  }
+
+  @include breakpoint($breakpoint-lg) {
+    font-size: 1.9rem;
+    line-height: $header-lg-height-menu-bar;
+  }
+
+  @include breakpoint($page-width-max) {
+    font-size: 2.4rem;
+  }
+}
+
+.header-nav__secondary-wrapper {
+  display: none;
+  position: absolute;
+  top: $header-sm-height-total;
+  left: 0;
+  width: 100%;
+  padding: 10px 10px 120px;
+  background-color: $color-lighter;
+  z-index: 21;
+  box-sizing: border-box;
+
+  .js-mobile-header-nav-open .header-nav__primary-item--active & {
+    display: block;
+  }
+
+  @include breakpoint($breakpoint-sm-only) {
+    .header-no-primary-links & {
+      top: 50px;
+    }
+  }
+
+  @include breakpoint($breakpoint-md-only) {
+    .header-no-primary-links & {
+      top: 70px;
+    }
+  }
+
+  @include breakpoint($breakpoint-md) {
+    top: auto;
+    height: $header-md-height-secondary-nav;
+    padding: 0;
+    background: url('../images/#{$header-background-filename}') left center;
+
+    .header-nav__primary-item--active & {
+      display: block;
+    }
+  }
+
+  @include breakpoint($breakpoint-lg) {
+    .header-no-primary-links & {
+      top: 100px;
+    }
+  }
+
+  @include breakpoint($page-width-max) {
+    background-position: center center;
+  }
+}
+
+.header-nav__secondary {
+  @include reset-list;
+  @include clearfix;
+
+  &:not(:last-child) {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid $color-light;
+  }
+
+  @include breakpoint($breakpoint-md) {
+    &:not(:last-child) {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    &:not(:first-child) {
+      display: none;
+    }
+  }
+}
+
+.js-header-nav--secondary--hidden {
+  display: none;
+}
+
+.header-nav__secondary-item {
+  @include breakpoint($breakpoint-md) {
+    height: 100%;
+    float: left;
+  }
+}
+
+.js-header-nav-item--secondary--hidden {
+  @include breakpoint($breakpoint-sm-only) {
+    display: none;
+  }
+}
+
+.header-nav__secondary-button,
+.header-nav__secondary-link {
+  display: block;
+  color: $color-darkest;
+  font-size: 1.9rem;
+  letter-spacing: 1px;
+
+  @include breakpoint($breakpoint-md) {
+    height: $header-md-height-secondary-nav;
+    transition: text-shadow $transition-standard;
+    color: $color-white;
+    font-size: 1.6rem;
+    line-height: $header-md-height-secondary-nav + 3px;
+    text-transform: uppercase;
+    -webkit-font-smoothing: antialiased;
+
+    .header-nav__secondary-item:hover &,
+    .header-nav__secondary-item--active & {
+      // Make text bold without increasing container width.
+      text-shadow: .25px 0 .1px, -.25px 0 .1px $color-white;
+    }
+  }
+
+  @include breakpoint($breakpoint-md-only) {
+    .header-no-primary-links & {
+      font-size: 1.3rem;
+    }
+  }
+
+  @include breakpoint($breakpoint-lg) {
+    font-size: 1.9rem;
+  }
+}
+
+.header-nav__secondary-button {
+  @include reset-button;
+  position: relative;
+  width: 100%;
+  padding: 10px 0;
+  text-align: left;
+
+  .icon {
+    position: absolute;
+    top: 17px;
+    right: 10px;
+  }
+
+  @include breakpoint($breakpoint-md) {
+    width: auto;
+    padding: 0 12px;
+
+    .icon {
+      display: none;
+    }
+  }
+}
+
+.header-nav__secondary-link {
+  padding: 10px 0;
+  text-decoration: none;
+
+  @include breakpoint($breakpoint-sm-only) {
+    position: relative;
+
+    .icon {
+      position: absolute;
+      top: 13px;
+      right: 5px;
+      width: 17px;
+      height: 17px;
+    }
+
+    img {
+      position: absolute;
+      top: 13px;
+      right: 0;
+    }
+  }
+
+  @include breakpoint($breakpoint-md) {
+    padding: 0 12px;
+    box-sizing: border-box;
+  }
+}
+
+.header-nav__secondary-link--logout {
+  color: $color-error;
+}
+
+.header-nav__tertiary-wrapper {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding: 20px 10px 120px;
+  background-color: $color-lighter;
+  z-index: 21;
+  box-sizing: border-box;
+
+  .js-mobile-header-nav-open .header-nav__secondary-item.js-header-nav-item--active & {
+    display: block;
+  }
+
+  @include breakpoint($breakpoint-md) {
+    display: block;
+    top: auto;
+    padding: 0;
+    transition: visibility .2s ease-in-out 0s, opacity .2s ease-in-out 0s;
+    background-color: $color-white;
+    box-shadow: 0 30px 30px 0 rgba(0, 0, 0, .3);
+    // Fade in/out on hover.
+    opacity: 0;
+    visibility: hidden;
+
+    .header-nav__secondary-item:hover & {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+.header-nav__tertiary-back-button {
+  @include reset-button;
+  @include text-ui($color-dark);
+  display: block;
+  position: relative;
+  left: -10px;
+  padding: 8px 10px;
+  border-radius: 0 10px 10px 0;
+  background-color: $color-white;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  .icon {
+    position: relative;
+    top: 1px;
+    margin-right: 5px;
+  }
+
+  @include breakpoint($breakpoint-md) {
+    display: none;
+  }
+}
+
+.header-nav__tertiary {
+  @include reset-list;
+  margin-bottom: 10px;
+
+  @include breakpoint($breakpoint-md) {
+    display: flex;
+    margin-bottom: 20px;
+  }
+
+  @include breakpoint($breakpoint-xl) {
+    margin-bottom: 11px;
+  }
+}
+
+.header-nav__tertiary--marketing {
+  @include breakpoint($breakpoint-xl) {
+    width: 75%;
+    float: left;
+  }
+}
+
+.header-nav__tertiary-menu {
+  @include breakpoint($breakpoint-md) {
+    position: relative;
+    flex: 1;
+    margin: 0;
+    padding: 0 $gutter-width-half;
+    box-sizing: border-box;
+
+    &:not(:first-child):before {
+      position: absolute;
+      top: 55px;
+      bottom: 35px;
+      left: -12px;
+      border-left: 1px solid $color-light;
+      content: '';
+    }
+  }
+}
+
+.header-nav__tertiary-menu-label {
+  @include text-ui($color-medium-dark);
+  display: block;
+  margin-top: 20px;
+  text-transform: uppercase;
+
+  @include breakpoint($breakpoint-md) {
+    margin: 20px 0 10px;
+  }
+}
+
+.header-nav__tertiary-menu-items {
+  @include reset-list;
+  margin-top: 10px;
+}
+
+.header-nav__tertiary-menu-link {
+  display: block;
+  padding: 10px 0;
+  color: $color-darkest;
+  font-size: 1.9rem;
+  letter-spacing: 1px;
+  text-decoration: none;
+
+  @include breakpoint($breakpoint-md) {
+    padding: 7px 0;
+    transition: color $transition-standard;
+    color: $color-dark;
+    font-size: 1.4rem;
+    letter-spacing: normal;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+
+  @include breakpoint($breakpoint-lg) {
+    padding: 4px 0;
+    font-size: 1.9rem;
+  }
+}
+
+.header-nav__tertiary-menu-link--accent {
+  font-weight: $font-weight-bold;
+
+  .icon {
+    transition: fill $transition-standard;
+  }
+
+  &:hover {
+    .icon {
+      fill: $color-primary;
+    }
+  }
+
+  @include breakpoint($breakpoint-sm-only) {
+    .icon {
+      display: none;
+    }
+  }
+}
+
+.header-nav__tertiary-menu-items--graphic {
+  @include breakpoint($breakpoint-md) {
+    display: table;
+    margin: 0 auto;
+  }
+}
+
+.header-nav__tertiary-menu-item--graphic {
+  @include breakpoint($breakpoint-md) {
+    display: table-cell;
+    position: relative;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+}
+
+.header-nav__tertiary-menu-link--graphic {
+  max-width: 240px;
+  margin: 0 auto;
+  padding: 0;
+  line-height: 2.3rem;
+  text-align: center;
+}
+
+.header-nav__tertiary-menu-graphic {
+  display: block;
+  max-width: 100%;
+  margin: 10px auto 0;
+
+  @include breakpoint($breakpoint-xl) {
+    margin-bottom: 10px;
+  }
+}
+
+.header-nav__tertiary-menu-item--horizontal {
+  @include breakpoint($breakpoint-md) {
+    padding: 15px 0 16px;
+    float: left;
+    box-sizing: border-box;
+  }
+
+  &:first-child > a {
+    padding-left: 2px;
+  }
+
+  &:last-child > a {
+    padding-right: 2px;
+  }
+}
+
+.header-nav__tertiary-menu-link--horizontal {
+  @include breakpoint($breakpoint-md) {
+    padding: 0 12px;
+    font-size: 1.4rem;
+    letter-spacing: normal;
+    box-sizing: border-box;
+  }
+}
+
+.header-nav__tertiary-marketing-placement {
+  display: none;
+
+  @include breakpoint($breakpoint-xl) {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: calc(25% - 10px);
+    float: right;
+    box-shadow: -10px 0 10px 0 rgba(0, 0, 0, .1);
+  }
+}
+
+.header-nav__tertiary-marketing-link {
+  text-decoration: none;
+}
+
+// Using a background image rather than an img tag allows for easy centering
+// when the image is wider than the container. It also ensures the image won't
+// be downloaded on mobile, where it isn't ever visible.
+.header-nav__tertiary-marketing-image {
+  height: calc(100% - 75px);
+  background-position: top center;
+}
+
+.header-nav__tertiary-marketing-text {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 75px;
+  padding-top: 1px;
+  font-weight: $font-weight-bold;
+
+  &:after {
+    position: absolute;
+    top: -9px;
+    left: calc(50% - 15px);
+    width: 0;
+    height: 0;
+    border-right: 15px solid transparent;
+    border-bottom: 10px solid $color-white;
+    border-left: 15px solid transparent;
+    content: '';
+  }
+}
+
+.header-nav__tertiary-marketing-title {
+  display: block;
+  margin: 15px 0 2px;
+  color: $color-dark;
+  font-size: 1.9rem;
+  font-weight: $font-weight-normal;
+  line-height: 2.3rem;
+  text-align: center;
+}
+
+.header-nav__tertiary-marketing-cta {
+  @include text-ui($color-primary);
+  display: block;
+  margin-bottom: 15px;
+  line-height: 2.0rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+// This element is empty, but is still needed for a background, border, and
+// shadow around the icons, logo, and large navigation. Those elements can't
+// live within this one because of different positioning and z-indexes needed at
+// different widths.
+.header-menu-bar {
+  position: absolute;
+  top: $header-sm-height-primary-nav;
+  left: 0;
+  width: 100%;
+  height: $header-sm-height-menu-bar - 1px;
+  border-bottom: 1px solid $color-light;
+  background-color: $color-white;
+  z-index: 21;
+
+  body.js-mobile-header-nav-open:not(.js-header-search-open) & {
+    box-shadow: $header-dropshadow;
+  }
+
+  @include breakpoint($breakpoint-sm-only) {
+    .header-no-primary-links & {
+      top: 0;
+    }
+  }
+
+  @include breakpoint($breakpoint-md) {
+    top: 0;
+    height: $header-md-height-menu-bar;
+    border-bottom: 0;
+  }
+
+  @include breakpoint($breakpoint-lg) {
+    height: $header-lg-height-menu-bar;
+  }
+}
+
+.header__icons {
+  position: absolute;
+  top: $header-sm-height-primary-nav;
+  right: 0;
+  height: $header-sm-height-menu-bar;
+  overflow: hidden;
+  z-index: 22;
+
+  @include breakpoint($breakpoint-sm-only) {
+    .header-no-primary-links & {
+      top: 0;
+    }
+  }
+
+  @include breakpoint($breakpoint-md) {
+    top: 0;
+    height: $header-md-height-menu-bar;
+    overflow: visible;
+  }
+
+  @include breakpoint($breakpoint-lg) {
+    height: $header-lg-height-menu-bar;
+  }
+
+  // Correct icon placement when the page is beyond the maximum width.
+  @include breakpoint($page-width-max) {
+    right: auto;
+    left: 50%;
+    width: $page-width-max;
+    margin-left: -1 * ($page-width-max / 2);
+    pointer-events: none;
+  }
+}
+
+.header__icons-inner {
+  height: 100%;
+
+  @include breakpoint($page-width-max) {
+    float: right;
+    pointer-events: auto;
+  }
+}
+
+.header__icon {
+  @include reset-button;
+  position: relative;
+  width: 38px;
+  height: 100%;
+
+  @include breakpoint($breakpoint-md) {
+    width: 50px;
+  }
+}
+
+.header__icon--menu {
+  position: absolute;
+  top: $header-sm-height-primary-nav;
+  left: 0;
+  height: $header-sm-height-menu-bar;
+  z-index: 22;
+
+  .icon {
+    position: relative;
+    top: 2px;
+  }
+
+  .icon--menu-hamburger {
+    .js-mobile-header-nav-open & {
+      display: none;
+    }
+  }
+
+  .icon--menu-close {
+    display: none;
+
+    .js-mobile-header-nav-open & {
+      display: inline-block;
+      fill: $color-error;
+    }
+  }
+
+  @include breakpoint($breakpoint-sm-only) {
+    .header-no-primary-links & {
+      top: 0;
+    }
+  }
+
+  @include breakpoint($breakpoint-md) {
+    display: none;
+  }
+}
+
+.header-nav__country {
+  @include reset-button;
+  display: none;
+  position: absolute;
+  right: 0;
+  bottom: (-1 * $header-md-height-secondary-nav);
+  height: $header-md-height-secondary-nav;
+  color: $color-white;
+  font-size: 1.4rem;
+  letter-spacing: 2px;
+  z-index: 25;
+
+  @include breakpoint($breakpoint-md) {
+    display: block;
+  }
+
+  @include breakpoint($breakpoint-lg) {
+    font-size: 1.9rem;
+  }
+}
+
+.header-nav__country-label {
+  display: inline-block;
+  position: relative;
+  top: 1px;
+  padding: 0 8px 0 6px;
+  transition: text-shadow $transition-standard;
+  vertical-align: middle;
+  -webkit-font-smoothing: antialiased;
+  pointer-events: none;
+
+  .header-nav__country:hover & {
+    // Make text bold without increasing container width.
+    text-shadow: .25px 0 .1px, -.25px 0 .1px $color-white;
+  }
+}
+
+.header-nav__country-image {
+  display: inline-block;
+  vertical-align: middle;
+  pointer-events: none;
+}
+
+.header__logo-wrapper {
+  position: absolute;
+  top: $header-sm-height-primary-nav;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 23;
+
+  @include breakpoint($breakpoint-sm-only) {
+    .header-no-primary-links & {
+      top: 0;
+    }
+  }
+
+  @include breakpoint($breakpoint-md) {
+    top: 0;
+  }
+}
+
+.header__logo {
+  display: block;
+  height: $header-sm-height-menu-bar - 10px;
+  margin: 5px auto;
+
+  @include breakpoint($breakpoint-md) {
+    height: $header-md-height-menu-bar - 10px;
+  }
+
+  @include breakpoint($breakpoint-lg) {
+    height: $header-lg-height-menu-bar - 10px;
+  }
+}
+
+.header__icon--search,
+.header__icon--wishlist,
+.header__icon--account,
+.header__icon--cart {
+  display: block;
+  float: left;
+
+  @include breakpoint($breakpoint-md) {
+    position: relative;
+    width: 70px;
+    height: 100%;
+
+    .icon {
+      transition: fill $transition-standard;
+    }
+
+    &:hover {
+      .icon {
+        fill: $color-primary;
+      }
+    }
+  }
+}
+
+.header__icon--search {
+  position: relative;
+
+  .icon--close-large {
+    display: none;
+    width: 30px;
+    height: 30px;
+  }
+
+  &:after {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    bottom: 10px;
+    border-right: 1px solid $color-light;
+    content: '';
+  }
+
+  &:last-child {
+    &:after {
+      content: none;
+    }
+  }
+
+  .js-header-search-open & {
+
+    .icon--search {
+      display: none;
+    }
+
+    .icon--close-large {
+      display: inline-block;
+      fill: $color-error;
+    }
+  }
+
+  @include breakpoint($breakpoint-sm-only) {
+    .icon--close-large {
+      width: 16px;
+      height: 16px;
+    }
+
+    .icon--search {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  @include breakpoint($breakpoint-md) {
+    &:after {
+      top: 4px;
+      bottom: 4px;
+    }
+  }
+
+  @include breakpoint($breakpoint-lg) {
+    &:after {
+      top: 20px;
+      bottom: 20px;
+    }
+  }
+}
+
+.header__icon--wishlist {
+  display: none;
+  position: relative;
+
+  &.js-header-icon-active-wishlist {
+    display: block;
+  }
+
+  @include breakpoint($breakpoint-sm-only) {
+    .icon {
+      top: 1px;
+      left: 1px;
+      width: 21px;
+      height: 21px;
+    }
+  }
+
+  @include breakpoint($breakpoint-md) {
+    left: 2px;
+  }
+}
+
+.header__icon--cart {
+  .icon--cart {
+    display: none;
+  }
+
+  &.js-header-icon-empty-cart {
+    .icon--cart-item {
+      display: none;
+    }
+
+    .icon--cart {
+      display: inline-block;
+    }
+  }
+
+  @include breakpoint($breakpoint-sm-only) {
+    .header__icon-trigger {
+      display: none;
+    }
+
+    .icon {
+      width: 25px;
+      height: 22px;
+    }
+  }
+
+  @include breakpoint($breakpoint-md) {
+    width: 60px;
+
+    .header__icon-link {
+      display: none;
+    }
+
+    .icon {
+      position: relative;
+      left: 5px;
+    }
+  }
+}
+
+// Opens the header cart on non-mobile breakpoints.
+.header__icon--cart--button {
+  @include breakpoint($breakpoint-sm-only) {
+    display: none;
+  }
+}
+
+// Links to the cart on the smallest breakpoint.
+.header__icon--cart--link {
+  .icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  @include breakpoint($breakpoint-md) {
+    display: none;
+  }
+}
+
+.header__icon--account {
+  display: none;
+
+  .icon--account-active {
+    fill: $color-primary;
+  }
+
+  @include breakpoint($breakpoint-md) {
+    display: block;
+  }
+}
+
+.header-flyout {
+  display: none;
+  position: absolute;
+  top: $header-sm-height-total;
+  right: 0;
+  left: 0;
+  padding: 10px;
+  background-color: $color-white;
+  box-shadow: $header-dropshadow;
+  z-index: 12;
+  box-sizing: border-box;
+
+  @include breakpoint($breakpoint-sm-only) {
+    .header-no-primary-links & {
+      top: 50px;
+    }
+  }
+
+  @include breakpoint($breakpoint-md) {
+    top: $header-md-height-total;
+    bottom: 0;
+    left: auto;
+    width: 360px;
+    height: calc(100% - 110px);
+    box-shadow: -10px 0 10px 0 rgba(0, 0, 0, .1);
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+
+  @include breakpoint($breakpoint-lg) {
+    top: $header-lg-height-total;
+    height: calc(100% - 140px);
+  }
+}
+
+.header-flyout--cart {
+  @include breakpoint($breakpoint-md) {
+    overflow-y: hidden;
+  }
+}
+
+.js-header-search-open .header-flyout--search,
+.js-header-cart-open .header-flyout--cart {
+  display: block;
+}
+
+.header-search__input {
+  width: 100%;
+  padding: 10px 20px;
+  border: 1px solid $color-light;
+  border-radius: 0;
+  font-size: 1.4rem;
+  box-sizing: border-box;
+
+  &:focus {
+    border: 1px solid $color-primary;
+    outline: none;
+  }
+
+  @include breakpoint($breakpoint-md) {
+    padding: 15px 20px;
+  }
+}
+
+.header-search__button {
+  @include reset-button;
+  display: block;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  padding-right: 20px;
+  pointer-events: none;
+
+  .icon--search {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+
+    .js-header-search--active & {
+      display: none;
+    }
+  }
+
+  .icon--close-large {
+    display: none;
+
+    .js-header-search--active & {
+      display: inline-block;
+    }
+  }
+
+  .js-header-search--active & {
+    pointer-events: auto;
+  }
+
+  @include breakpoint($breakpoint-md) {
+    height: 50px;
+
+    .icon--close-large {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  @include breakpoint($breakpoint-xl) {
+    .icon--search {
+      .js-header-search--active & {
+        display: inline-block;
+        fill: $color-primary;
+      }
+    }
+
+    .icon--close-large {
+      .js-header-search--active & {
+        display: none;
+      }
+    }
+  }
+}
+
+.header-search__list {
+  display: none;
+
+  @include breakpoint($breakpoint-md) {
+    display: block;
+
+    .js-header-search--active & {
+      display: none;
+    }
+  }
+}
+
+.header-search__list-label {
+  @include text-ui($color-dark);
+  display: block;
+  padding: 20px 0 10px;
+  text-transform: uppercase;
+}
+
+.header-search__list-items {
+  @include text-label;
+  margin: 0;
+  padding: 0;
+  line-height: 2.8rem;
+  list-style-type: none;
+}
+
+.header-search__list-link {
+  transition: color $transition-standard;
+  color: $color-darkest;
+  text-decoration: none;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+.header-search__results {
+  display: none;
+
+  .js-header-search--active & {
+    display: block;
+  }
+}
+
+.header-search__result-link {
+  display: none;
+
+  .icon {
+    position: relative;
+    top: 1px;
+    width: 3px;
+    padding-left: 8px;
+  }
+
+  &:hover .icon {
+    fill: $color-primary;
+  }
+
+  @include breakpoint($breakpoint-md) {
+    @include text-label($color-darkest);
+    display: inline-block;
+    margin-top: 10px;
+    line-height: 4.0rem;
+    text-decoration: none;
+  }
+}
+
+.header-cart__header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 50px;
+  padding: 10px;
+  background-color: $color-lighter;
+  box-sizing: border-box;
+}
+
+.header-cart__title {
+  color: $color-dark;
+  font-size: 2.4rem;
+  font-weight: $font-weight-bold;
+  line-height: 3.5rem;
+
+  & > .icon {
+    position: relative;
+    top: -2px;
+    height: 9px;
+    padding-left: 5px;
+  }
+}
+
+.header-cart__item-count {
+  position: relative;
+  float: right;
+  color: $color-darkest;
+  font-size: 1.4rem;
+  line-height: 4.0rem;
+
+  &:not(.header-cart__item-count--empty):before {
+    display: block;
+    position: absolute;
+    top: calc(50% - 6px);
+    left: -20px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: $color-primary;
+    content: '';
+  }
+}
+
+.header-cart {
+  // Forces scrollbar visibility.
+  // http://simurai.com/blog/2011/07/26/webkit-scrollbar
+  @include breakpoint($breakpoint-md) {
+    ::-webkit-scrollbar {
+      width: 7px;
+      -webkit-appearance: none;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background-color: rgba(0, 0, 0, .5);
+      box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+    }
+  }
+}
+
+.header-cart__products {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  bottom: 141px;
+  left: 10px;
+  padding-right: 10px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  .header-cart--tax & {
+    bottom: 161px;
+  }
+}
+
+.header-cart__item {
+  @include clearfix;
+  padding-bottom: 5px;
+  border-bottom: 1px solid $color-light;
+
+  & > a:focus {
+    outline: none;
+  }
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.header-cart__item-image {
+  max-height: 117px;
+  margin: 0 auto;
+}
+
+.header-cart__item-info {
+  display: block;
+  color: $color-darkest;
+  font-size: 1.4rem;
+  line-height: 2.0rem;
+}
+
+.header-cart__item-info--name {
+  font-weight: $font-weight-bold;
+}
+
+.header-cart__item-vip-info {
+  margin-top: -20px;
+  color: $color-medium-dark;
+  font-size: 1.1rem;
+  line-height: 1.4rem;
+  text-align: right;
+}
+
+.header-cart__item-vip-card-value {
+  display: block;
+  white-space: nowrap;
+}
+
+.header-cart__item-vip-original-price {
+  display: block;
+  text-decoration: line-through;
+}
+
+.header-cart__item-info--qty,
+.header-cart__item-info--price {
+  margin-top: 10px;
+}
+
+.header-cart__item-info--qty {
+  float: left;
+}
+
+.header-cart__item-info--price {
+  float: right;
+}
+
+.header-cart__item-remove {
+  padding: 0;
+  float: right;
+  clear: both;
+  color: $color-error;
+  line-height: 4.0rem;
+}
+
+.header-cart__footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 141px;
+  background-color: $color-lighter;
+  box-sizing: border-box;
+
+  .header-cart--tax & {
+    height: 161px;
+  }
+}
+
+.header-cart__subtotal {
+  height: 50px;
+  margin: 0 $gutter-width-half;
+  border-bottom: 1px solid $color-light;
+  color: $color-darkest;
+  font-size: 1.4rem;
+  line-height: 5.0rem;
+
+  .header-cart--tax & {
+    height: 70px;
+  }
+}
+
+.header-cart__subtotal-value {
+  float: right;
+  font-weight: $font-weight-bold;
+}
+
+.header-cart__subtotal-tax {
+  margin-top: -15px;
+  float: right;
+  clear: both;
+  color: $color-medium-dark;
+  font-size: 1.2rem;
+  line-height: 2.0rem;
+}
+
+.header-cart__actions {
+  @include clearfix;
+}
+
+.header-cart__action {
+  display: block;
+  width: calc(100% - 60px);
+  margin: 20px 30px;
+  padding: 0;
+  float: left;
+  box-sizing: border-box;
+}
+
+.header-cart__payment-methods {
+  @include reset-list;
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  height: 30px;
+  margin: 0 $gutter-width-half;
+  padding: 10px 0;
+  border-top: 1px solid $color-light;
+  box-sizing: border-box;
+
+  .payment-method {
+    height: 30px;
+  }
+}
+
+.header-cart__empty {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.header-cart__empty-inner {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  transform: translateY(-50%);
+  text-align: center;
+}
+
+.header-cart__empty-brand-logo {
+  margin: 0 auto;
+}
+
+.header-cart__empty-label {
+  display: block;
+  margin: 20px 0;
+  color: $color-darkest;
+  font-size: 1.6rem;
+  line-height: 1.9rem;
+}
+
+.header-cart__empty-button {
+  padding: 0 20px;
+}
+
+.header-cart__item-info--repair-name {
+  font-weight: $font-weight-bold;
+}
+
+.header-cart__item-info--repair-type {
+  font-weight: $font-weight-bold;
+}
+
+.header-cart__item-info--repair-price {
+  float: right;
+  text-align: right;
+}
+
+.header-cart__item-repair {
+  @include clearfix;
+  margin-bottom: 10px;
+}
+
+.header-cart__item--repair {
+  @include clearfix;
+  padding-bottom: 5px;
+  border-bottom: 1px solid $color-light;
+
+  .header-cart__item-info--repair-type {
+    display: inline;
+  }
+}
+
+.header-cart__item--surcharge {
+  padding-top: 30px;
+  padding-bottom: 15px;
+
+  & > span {
+    display: block;
+  }
+
+  .icon {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .header-cart__item-info--repair-type {
+    margin: 30px 0 0;
+  }
+
+  .header-cart__item-info--repair-price {
+    position: static;
+    width: 100%;
+    float: none;
+    clear: both;
+    text-align: left;
+  }
+}
+
+.js-header-search-open,
+.js-header-cart-open {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+// Darkened overlay covering the screen when flyouts are open.
+.header-flyout-overlay {
+  display: none;
+
+  .js-header-search-open &,
+  .js-header-cart-open & {
+    display: block;
+    position: absolute;
+    top: $header-md-height-total;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: calc(100% - 110px);
+    background-color: $color-black;
+    content: '';
+    opacity: .5;
+    z-index: 11;
+
+    @include breakpoint($breakpoint-sm-only) {
+      top: 0;
+      height: 100vh;
+    }
+
+    @include breakpoint($breakpoint-lg) {
+      top: $header-lg-height-total;
+      height: calc(100% - 140px);
+    }
+  }
+}

@@ -1,0 +1,107 @@
+<div data-section-id="{{ section.id }}" data-section-type="header-section">
+  {% if section.settings.message %}
+    {% if section.settings.home_page_only == false or template.name == 'index' %}
+      <style>
+        .announcement-bar {
+          background-color: {{ section.settings.color_bg }};
+        }
+
+        .announcement-bar--link:hover {
+          {% assign brightness = section.settings.color_bg | color_brightness %}
+
+          {% if brightness <= 192 %}
+            {% assign lightenAmount = 255 | minus: brightness | divided_by: 255 | times: 16 %}
+            background-color: {{ section.settings.color_bg | color_lighten: lightenAmount }};
+          {% else %}
+            {% assign darkenAmount = 255 | divided_by: brightness | times: 8 %}
+            background-color: {{ section.settings.color_bg | color_darken: darkenAmount }};
+          {% endif %}
+        }
+
+        .announcement-bar__message {
+          color: {{ section.settings.color_text }};
+        }
+      </style>
+      <div class="promo-bar js-promo-bar"> 
+        <div class="promo-bar__inner u-page-width-max">
+      {% if section.settings.message_link != blank %}
+        <a href="{{ section.settings.message_link }}" class="promo-bar__link">
+      {% endif %}
+      {{ section.settings.message_text | escape }}
+      {% if section.settings.message_link != blank %}
+        </a>
+      {% endif %}
+    {% endif %}
+    <button class="promo-bar__close-button"> <i class="fas fa-times"></i></button>
+ </div> 
+</div>
+  {% endif %}
+</div>
+
+{% schema %}
+  {
+    "name": {
+      "en": "Header",
+      "de": "Titel",
+      "fr": "En-tête"
+    },
+    "settings": [
+      {
+        "type": "header",
+        "content": {
+          "en": "Announcement bar",
+          "de": "Ankündigungsbereich",
+          "fr": "Barre d'annonces"
+        }
+      },
+      {
+        "type": "checkbox",
+        "id": "message",
+        "label": {
+          "en": "Show announcement",
+          "de": "Ankündigung anzeigen",
+          "fr": "Afficher l'annonce"
+        },
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "home_page_only",
+        "label": {
+          "en": "Home page only",
+          "de": "Nur Startseite",
+          "fr": "Page d'accueil uniquement"
+        },
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "message_text",
+        "label": {
+          "en": "Text",
+          "de": "Text",
+          "fr": "Texte"
+        },
+        "default": {
+          "en": "Announce something here",
+          "de": "Hier etwas ankündigen",
+          "fr": "Annoncez quelque chose ici"
+        }
+      },
+      {
+        "type": "url",
+        "id": "message_link",
+        "label": {
+          "en": "Link",
+          "de": "Link",
+          "fr": "Lien"
+        },
+        "info": {
+          "en": "Optional",
+          "de": "Optional",
+          "fr": "Facultatif"
+        }
+      }
+    ]
+  }
+{% endschema %}

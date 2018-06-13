@@ -1,0 +1,190 @@
+<div class="page-width test">
+{% if section.settings.title != blank %}
+<div class="section-header text-center">
+<h4 class="h2">{{ section.settings.title | escape }}</h4>
+</div>
+{% endif %}
+
+<div class="custom-content">
+{% for block in section.blocks %}
+{% case block.settings.width %}
+{% when '25%' %}
+<style>
+.custom__item--{{block.id}} .custom__image {
+max-height: 250px;
+}
+</style>
+{%- assign block_width = 'small--one-half medium-up--one-quarter' -%}
+{%- assign image_size = '250x250' -%}
+{% when '33%' %}
+<style>
+.custom__item--{{block.id}} .custom__image {
+max-height: 345px;
+}
+</style>
+{%- assign block_width = 'small--one-half medium-up--one-third' -%}
+{%- assign image_size = '345x345' -%}
+{% when '50%' %}
+<style>
+.custom__item--{{block.id}} .custom__image {
+max-height: 530px;
+}
+</style>
+{%- assign block_width = 'small--one-half medium-up--one-half' -%}
+{%- assign image_size = '530x530' -%}
+{% when '66%' %}
+<style>
+.custom__item--{{block.id}} .custom__image {
+max-height: 720px;
+}
+</style>
+{%- assign block_width = 'medium-up--two-thirds' -%}
+{%- assign image_size = '720x720' -%}
+{% when '75%' %}
+<style>
+.custom__item--{{block.id}} .custom__image {
+max-height: 810px;
+}
+</style>
+{%- assign block_width = 'medium-up--three-quarters' -%}
+{%- assign image_size = '810x810' -%}
+{% when '100%' %}
+<style>
+.custom__item--{{block.id}} .custom__image {
+max-height: 1090px;
+}
+</style>
+{%- assign block_width = 'one-whole' -%}
+{%- assign image_size = '1090x1090' -%}
+{% endcase %}
+<div class="custom__item custom__item--{{block.id}} {{ block_width }} {% if block.settings.alignment %}align--{{ block.settings.alignment }}{% endif %}" {{ block.shopify_attributes }}>
+<div class="custom__item-inner custom__item-inner--{{ block.type }}">
+{% case block.type %}
+{% when 'image' %}
+{% if block.settings.image != blank %}
+{%- assign image_alt = block.settings.image.alt -%}
+{{ block.settings.image | img_url: image_size, scale: 2, crop: 'top' | img_tag: image_alt, 'custom__image' }}
+{% else %}
+{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+{% endif %}
+{% when 'text' %}
+<div class="medium-up--text-{{ block.settings.align_text }}">
+{% if block.settings.title != blank %}
+<h4 class="h3">{{ block.settings.title | escape }}</h4>
+{% endif %}
+{% if block.settings.text != blank %}
+<div class="rte-setting">{{ block.settings.text }}</div>
+{% endif %}
+</div>
+{% when 'video' %}
+<div class="video-wrapper">
+{% if block.settings.video_url == blank %}
+<iframe src="//www.youtube.com/embed/_9VUPq3SxOc?rel=0&showinfo=0&vq=720" width="850" height="480" frameborder="0" allowfullscreen></iframe>
+{% else %}
+{% if block.settings.video_url.type == "youtube" %}
+<iframe src="//www.youtube.com/embed/{{ block.settings.video_url.id }}?rel=0&showinfo=0&vq=720" width="850" height="480" frameborder="0" allowfullscreen></iframe>
+{% endif %}
+{% if block.settings.video_url.type == "vimeo" %}
+<iframe src="//player.vimeo.com/video/{{ block.settings.video_url.id }}?byline=0&portrait=0&badge=0" width="850" height="480" frameborder="0" allowfullscreen></iframe>
+{% endif %}
+{% endif %}
+</div>
+{% when 'product' %}
+{%- assign product = all_products[block.settings.product] -%}
+{% if product.title.size > 0 %}
+{% include 'product-card-grid', grid_image_width: image_size %}
+{% else %}
+{% comment %}
+No product yet. Show onboarding one.
+{% endcomment %}
+<div class="grid-view-item">
+<a class="grid-view-item__link" href="#">
+<div class="grid-view-item__image">
+{% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+{{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+</div>
+<div class="h4 grid-view-item__title">{{ 'homepage.onboarding.product_title' | t }}</div>
+<div class="grid-view-item__meta">
+{{ 1999 | money }}
+</div>
+</a>
+</div>
+{% endif %}
+{% when 'collection' %}
+{%- assign collection = collections[block.settings.collection] -%}
+{% include 'collection-grid-item', collection_image_size: image_size %}
+{% when 'html' %}
+{% if block.settings.code != blank %}
+{{ block.settings.code }}
+{% endif %}
+{% endcase %}
+</div>
+</div>
+
+{% endfor %}
+</div>
+
+{% comment %} {% if section.blocks.size == 0 %}
+{% include 'no-blocks' %}
+{% endif %} {% endcomment %}
+</div>
+
+{% schema %}
+  {
+    "name": {
+      "en": "Single Image Banner",
+      "de": "Single Image Banner2",
+      "fr": "Single Image Banner3"
+    },
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "showOnHomepage",
+        "label": {
+          "en": "Show Single Page Banner",
+          "de": "Show Single Page Banner2",
+          "fr": "Show Single Page Banner3"
+        },
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "sib_home_page_only",
+        "label": {
+          "en": "Show on Home page only",
+          "de": "Show on Home page only2",
+          "fr": "Show on Home page only3"
+        },
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "sib_subheading",
+        "label": {
+          "en": "Text",
+          "de": "Text",
+          "fr": "Texte"
+        },
+        "default": {
+          "en": "Banner subheading",
+          "de": "Banner subheading2",
+          "fr": "Banner subheading3"
+        }
+      },
+      {
+        "type": "url",
+        "id": "sib_banner_link",
+        "label": {
+          "en": "Banner Link",
+          "de": "Banner Link",
+          "fr": "Banner Lien"
+        },
+        "info": {
+          "en": "Optional",
+          "de": "Optional",
+          "fr": "Facultatif"
+        }
+      }
+    ]
+  }
+{% endschema %}
